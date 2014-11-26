@@ -527,7 +527,283 @@ Other advantages:
 * Web browsers are awesome because even if OS or hardware changes they stay the same.
 
 ##6 Programming Best Practices
+**SKIPPED OWASP TOP 10**
 
+###6.3 OWASP Enterprise Security API (ESAPI)
+Designed to take care of many aspects of application security automatically.
+Helps developers guard against security related design and implementation flaws.
+All Security Methods is mapped to OWASP TOP 10.
+
+####6.3.1 Input Validation and Handeling
+Improper input handeling is the most common weakness in applications today.
+Leading cause of a lot of problems.
+Every input from user needs validation.
+
+Example problem: Netshop which stores price in hidden field at client side and uses that to calculate actual price...
+Use of proxy browser tools.
+
+Input handeling = validation, sanitization, filtering, encoding, and/or decoding of input data.
+WHITELIST!
+
+####6.3.2 Client-Side Versus Server-Side Validation
+Beneficial for user experience to validate on client side, but you NEED Server-Side validation
+Never do security on client side.
+
+####6.3.3 Input Sanitization
+Transforming input from original form to an acceptable form
+Example: HTML tags.
+Take care for semantically similar characters.
+
+####6.3.4 Canonicalization
+Deals with converting data with various possible representations into a standard representation acceptable by the application.
+Most common is *path canonicalization* of files and URLs.
+This is used to enforce access restrictions.
+Application should specify acceptable characterset (UTF-8, ISO-8859-1..)
+Also implement custom sanitization suited for the application.
+
+####6.3.6 Approaches to Validating Input Data
+
+**6.3.6.1 Exact Match**
+
+* Data is validated against list of known values.
+* Requires definition of all possible values that are considered valid input.
+* Provides strongest level of protection.
+* Often not feasable because of large number of possible good values are expected (Name, address).
+
+**6.3.6.2 Known Good**
+
+* Data validated against list of allowable characters
+* Requires definition of all acceptable characters
+* Regex
+
+**6.3.6.3 Known Bad**
+
+* Data validated against list of unacceptable characters
+* Useful for preventing specific characters from being accepted
+* Highly suseptible to evasion using various forms of character encoding
+* Weakest method
+
+####6.3.7 Handeling Bad Input
+Once you detect bad input  you have 3 choices:
+
+* *Escpaing input:* Attempt to fix data by encoding it in a safe format
+* *Rejecting input:* Dicard it
+* *Do nothing:* Not recommended
+
+####6.3.8 ESAPI interfaces
+Parts of ESAPI which covers input handeling:
+
+* Validator
+* Encoder
+* HTTPUtilities
+
+###6.4 Cross-Site Scripting
+Attacker try to inject client-side script on the browser of another user.
+If an attacker gets the users browser to execute there script it is within the security context of the application. 
+Using the level of privilege that user has. It can read, modify or transmit the users data.
+Can have there session hijacked.
+
+####6.4.1 Same Origin Policy
+The cornerstone browser security.
+Permits scripts running on pages originating from the same site to access each other's methods and properties, but prevents access to most methods and properties across pages on different domains. Consists of three things:
+
+* Domain
+* Port
+* Protocol
+
+Does not protect agains everything, only applies to:
+
+* Scripts acess across browser windows and frames
+* Script access to contents of an iframe or parent frame
+* Connection using XMLHttpRequest objects
+* Loading images and scripts using <tag src= >
+* Loading style sheets
+
+####6.4.2 Attacks through XSS
+
+Three types:
+
+* Persistent
+* Nonpersistent
+* DOM-based
+
+2 and 3 require user to either visit crafted link or visit a malicous Web page containing a form which when posted to the vulnerable site launches the attack.
+Malicious forms often takes the place of the real form. ( Can be sent automatically using JS).
+
+Persistent attacks occur when the malicious code is submitted to the website where it is stored over time.
+
+**6.4.2.1 Persistent Attacks**
+
+If a user submits a script to a forum or message board, every user which loads the page it is posted to will be exposed.
+In worst case it can hijack the session id from your cookies.
+
+**6.4.2.2 Nonpersistent Attacks**
+
+If you use a url variable to show something on you page, such as username the url can be maipulated to store a script.
+
+**6.4.2.2 DOM-Based Attacks**
+If you have JS which embed the URL as part of the page. Example as a form action.
+If you place scrips directly into the url it will be executed on the client.
+
+####6.4.3 Prevention of XSS
+One or more of these techniques are used:
+
+* Encode fields to escape HTML in output
+* Content-Type: text/html; charset[encoding]
+* Input validation
+	* Never trust input
+	* Avoid using input variables within client-side scripting code.
+* Cookie security
+	* HttpOnly
+	* Secure
+
+####6.4.4 ESAPI Interfaces
+* Encoder
+* Validater
+
+###6.5 Injection Attacks
+Many types of injection: SQL, LDAP, XML, etc..
+
+####6.5.1 SQL Injection
+Attacker exploit improper validation of input used in an SQL Query.
+Very dangerous!
+
+####6.5.4 Defending Against SQL Injection
+Validate input.
+Use PreparedStatements (Separates Data and Code of the Query)
+Remove dedault user accounts.
+Disable unnecessary functionality within db server.
+Db accounts should have minimal access needed.
+
+###6.6 Authenication and Session Management
+Something you know - Password
+Something you have - Security token or smartphone
+Something you are - Fingerprint
+
+If you handle sensistive data you should use a combiniation of at least 2.
+Attackers attempt to take control over someones identity.
+
+####6.6.1 Attacking Log-in Functionality
+Typical attacks:
+
+* *Username enumeration:* allows attacker to enumerate valid usernames to use with further attacks
+* *Password guessing:* most successful when users are allowed to use weak passwords
+* *Brute-force attack:* Succeeds if you have no account lock-out or max nr of login attempts.
+* *Authenticatipn mechanism attack:* Most effective with weak authentication (HTTP Basic Authentication)
+
+Defenses against:
+
+* Generic failed login message (Dont give information away)
+* Enforce lock-out after x number of attempts (Should trigger an alert sent to approperiate personnel)
+* Server-side enforcement of strong passwords.
+
+####6.6.2 Attacking Password Resets
+Typical attacks:
+
+* Requires user ID to initiate reset, this allows for username enumiration
+* Using bad security questions (fav color?)
+* Unlimited number of answers to security question
+* Displaying password directly to the user upon reset
+* Allowing users to define own sec questions.
+* Using standard or weak passwords as new password
+
+Defenses against:
+
+* manual pssword reset (if needed)
+* Consider multiple sec questions
+* Dont generate password for them, instead send reset url to email.
+
+###6.7 CSRF
+Used for:
+
+* Attacking trust a applciation has with its users
+* Abusing shared cookies to send requests to apps he/she is authenticated
+
+Attacker relies on:
+
+* User being logged in
+* Has persistent authentication(cookie) but not csrf token in the forms.
+
+###6.8 Session Management
+Stored sessions are vulnerable for hijacking.
+
+####6.8.1 Attacking Log-Out Functionality
+Typical attacks:
+
+* Applications which doesnt let users log out
+* Logout button doesnt terminate the session correctly
+
+Defenses against Log-Out attacks:
+
+* Give users logout option
+* Users are educated on importance of logging out
+* Automatic expiring user session
+* Clear session ID cookie
+* Set cookies as nonpersistent
+
+Defenses Against Cookie Attacks:
+
+* Never store sensitive information
+* Only ID for users session, which is used to look up on a session table at server-side
+* secure flag
+* httponly flag
+
+###6.9 Access Control
+Authorization should never rely on obscurity.
+Authorize every page, not only those directly referenced in the webpage.
+
+Defenses:
+
+* Implement role-based access control
+* Issue allow privileges on a case-bycase basis, and deny by default
+* Log all failed access requests and review these
+
+###6.10 Cryptography
+Includes:
+
+* Hashing functions
+* Public key infrastructure
+* Data integrity
+* Authentication
+
+####6.10.1 Hashing and Password Security
+Hash is used to verify integrity of data.
+HASHING IS NOT ENCRYPTION. Dont use it for confidentiality
+Most common usage is storing a representation of passwords.
+
+####6.10.2 Attacking the Hash
+
+Dictionary attacks:
+
+* Calculate hashes for a list of common words
+* Compare those with db table
+* if match, uses that word in clear text as password
+
+Brute-force Attack:
+
+* Try every possibility
+* Takes long and is not feasible if strong password requirement is enforced
+
+Precomputed Attacks (Rainbow tables)
+
+* You precompute the hashes and store them as a mapping table.
+* During attack you only compare (much faster)
+* Solution to this: Salted Hashes
+	* A salt is a random value appended to a password before it is hashed
+	* salt is not secret and are stored along with the password hash.
+	* Idea is to force recalculation of the hash on every attempt.
+
+####6.10.4 Message Authenication Code (MAC)
+* Hashes can be used to create unique fingerprint to detect if the message was changed.
+* IDEA:
+	* calculate hash before sending
+	* calculate hash after and compare
+* Problem is: If you send hash with the message the attacker can recalculate it and replace it with the new hash
+* Solution: HMAC
+	* calc the hash using a secret key or password
+	* attacker dont have secret so he cant change anything without us knowing
+
+###6.11 
 
 
 ##7 Special Considirations for Embedded Systems, Cloud Computing, and Mobile Computing Devices
