@@ -803,7 +803,38 @@ Precomputed Attacks (Rainbow tables)
 	* calc the hash using a secret key or password
 	* attacker dont have secret so he cant change anything without us knowing
 
-###6.11 
+###6.13 Additional Best Practices for Software Resilience
+
+####6.13.1 Externalize Variables
+To help meet NFRs like supportability, maintainability, manageability and reliability it is good pratice to store configuration variables external from compiled code, likely in a config or properties file on the server.
+Consider encrypting it if it stores sensitive data.
+
+ESAPI - EncryptedProperties can be used for this.
+
+#####6.13.3 Initialize Variables Properly
+int i = 3; NOT int i;
+
+####6.13.4 Do Not Ignore Values Returned by Functions
+if method returns value; Store it!
+
+####6.13.5 Avoid Integer Overflows
+BE mindful of maximum int values.
+
+###6.14 Top 10 Secure Coding Practices
+
+Recap:
+
+1. *Validate input:* ALWAYS validate input from all sources. 
+2. *Heed compiler warnings:* Compile code using highest compiler alert level
+3. *Architect and design for policy enforcement:* Design and implement softwae that enforces security and corporate policies.
+4. *Keep it simple:* Dont make things uneccesarry complex
+5. *Default deny:* WHITELIST
+6. *Adhere to the principle of least privilege:* Least set of privileges neccasary
+7. *Sanitize data sent to other systems:* input between different sub components might be targeted, sanitize the data.
+8. *Practice defense in depth:* Have many layers of security. Secure coding and secure environment together
+9. *Use effective assurance techniques:* Pen testing, fuzz tsting, source code audits are good practices.
+10. *Adopt a secure coding standard:* Develop and/or apply a secure coding standard for your target language/platform
+
 
 
 ##7 Special Considirations for Embedded Systems, Cloud Computing, and Mobile Computing Devices
@@ -1019,7 +1050,436 @@ You need to be logged in to the application to be able to test every part of it.
 Pen testing requires a environment closly similar to production.
 BUT you should not test in production.
 
-##9
+##9 Testing Commercial off-the-Shelf Systems
+Its hard to know what to do or who to contact if you find vulnerabilities in COTS systems.
+To evaluation them there are som industry standards, including the Common Criteria (CC).
+
+###9.1 The Problems with Shrink-Wrapped Software
+Testing og COTS applications are often inaduqiet, leaving the customers little ability to gain confidence in the product.
+Without this confidence we as users implement our own countermeasures around the existing software.
+Important to document testing off application.
+In the commercial world there hasent been a clear cut standard for security requirements.
+
+###9.2 The Common Criteria for Information Technology Security Evaluation
+CC is designed for use as a basis for evaluation security properies of IT products and systems.
+By establishing a CC base the evaluation of a product becomes more meaningful to a broader audience of buyers.
+Enables better comparabiltiy.
+Establish the level of confidence that the security functions provide.
+CC v3.1 consists of three parts:
+
+* Introduction and general model
+* Security functional requirements
+* Security assurance requirements
+
+CC is used to test security claims of the software manufacturer - not test if software meet some functional requirement.
+
+In the context of CC: functional requirements describe what security services a system should do by design, assurance requirments describe how well the functional requirements should be implemented and tested.
+
+####9.2.1 Harmonizing Evaluation Criteria
+Joint efforts to harmonize security evaluation criteria world wide.
+Important if companies want to sell products outside there borders without running specific security evaluations for each country.
+CC address this problem through the Common Criteria Recognition Arrangement (CCRA).
+
+CC is an approach to gaining confidence through the process of **Development**, **Evaluating** and **Operating** systems.
+
+####9.2.2 Development
+Central part of CC is the Protection Profile (PP) that allows devs and consumers to define and document sets of security requirements.
+
+####9.2.3 Evaluation
+Evaluators use what is called the Security Target (ST) as security specifications made for the product.
+Goal is to determine wheter security specs (ST) of the product are met.
+Evaluators then document there findings.
+
+####9.2.4 Operation
+If something is found after production you dont need to fully reevaluate the product. CC allows for Maintainance of  Assurance for incremental changes.
+
+####9.2.5 Key Concepts of the CC
+
+* *Protection Profile:* document that details, CC language and syntax, the security requirements for a given class of peoducts offering similar security functions (firewall, db server..). Vendors, consumers or cosnumer groups may all write PPs. 
+* *Evaluation Assurance Level:* designate the specific level of assurance required for the implementation descibed in PP. 
+* *Security Target:* Threats to TOE's security, security objectives, requirements and summary specs are primary input.
+
+####9.2.6 The Security Framework
+To understand CC you need to understand the framework it operates within.
+Includes the following areas:
+
+* Security environment
+* Objectives
+* TOE security requirements
+* Security specifications
+* Implementation
+
+####9.2.7 The CC Approach
+CC does not endore a specific design or development methodology, but assumes that security requriements are incorperated in the overall design of the system.
+
+####9.2.8 The Security Environment 
+To describe the environment completly the PP or ST must establish a set of assumptions about the following:
+
+* The TOE's phisical environment, including known personnel and physical security arrangements
+* The assets requiring protection, (Db or files)
+* The purpose of the TOE, including its product type and its intended purpose.
+
+
+**See Presentation Chapter 9 for more**
+
+##10 Implementing Security and Resilience Using CLASP
+We examine the CLASP methodology.
+
+What are covered:
+
+* CLASP concepts
+* Overview of CLASP processes
+* Key CLASP best practices
+* Activities toaugment software development processes
+* Applying CLASP activities to roles
+* Re-engineering your SDLC with CLASP
+* CLASP implementation roadmap
+
+###10.1 Comprehensive, Lightweight Application Security Process (CLASP)
+offers well-organized and structurred approach to help move security concerns into earlier stages of SDLC.
+Designed to be easy to adopt.
+Think of it as a resource library to avoid reinventing the wheel when you come across the need for new processes or ideas for secure sw development.
+CLASP provides details on:
+
+* Concepts behind CLASP
+* Seven best practives that define CLASP
+* High level security services that serve as a foundation
+* Core security principles
+* Abstract roles that are typically involved in software development.
+* Activities to help build more secure software.
+* CLASP process engineering and roadmap
+* Coding guidlines
+* Lexicon of common vulnerabilities
+
+###10.2 CLASP Concepts
+Designed to allow easy integration of security related activities.
+Each activity is divided into process components and are linked to one or more role (project manages, developer, tester, consumer).
+Vulnerability Lexicon. Allows for quick location of information from many perspectives:
+
+* Problem type
+* Categories of problem type
+* Exposure periods
+* Avoidance and mitigation periods
+* Consequences
+* Affected platforms and languags
+* Risk assessment
+
+###10.3 Overview of the CLASP Process
+CLASP structure:
+
+* CLASP views
+* CLASP resources
+* Vulnerability use cases
+
+Process presented through five high-level perspectives - CLASP views
+Each view is broken down into activities, which in turn contain process components.
+
+CLASP views
+
+1. Concepts View - Understand how CLASP process components interact and how to apply 2-5
+2. Role-Based View - Create roles required by security-related proejct and utilize them in 3, 4, 5
+3. Activity-Assessment View - Asses 24 security related CLASP activities for suitability in 4
+4. Activity-Implementation View - Perform subset of 24 activities selected in 3
+5. Vulnerability View - Integrate solutions to problem types into 3 and 4.
+
+###10.4 CLASP Key Best Practices
+The basis of all security related software development activities.
+
+####10.4.1 BP1: Institute Awareness Programs
+Educate everyone involved in the software process about essential security concepts and techniques.
+Can be rapidly implemented by hiring external securty experts.
+Everyone should receive general security training, and training specified to there role.
+Everyone should be familiar with the security requirements of the system.
+One Best practice: Address security issues during techinical meeting of the dev team.
+Solving security problem can be negative on the schedule.
+
+Appointing a security officer may be an excellent way to increase awareness. Can be rotated between different people as needed.
+
+The security officer should have at least the first 2 of these duties:
+
+* Serve as a repository of security expertise for other project members
+* Take into account security concerns thoughout the SDLC
+* Review work of other team members.
+
+Having rewards for effective handling of security issues = awareness. Reward makes behavior into habit.
+
+####10.4.2 BP2: Perform Application Assessment
+Testing and assessment should be central components of your software security strategy.
+CLASP offers detailed guidance for each of the following areas:
+
+* Identify, implement and perform security tests
+	* Find problems not found by implementation review
+	* Find risk introduces by the environment
+* Perform security analysis of system requirements and design
+	* Assess likely risks in timely and cost-effective manner.
+	* Identify high-leve threats not documented
+	* Identify improper security requirements
+	* Assess security impact of non-security requriements
+* Perform source-level review
+	* Find vulnerabilities introduces into implementation
+* Reseach the security posture of technology solutions
+	* Assess risks in third-party applications
+	* Determine how effective it is likely to be at elevated risks
+* Verify security attributes of resources
+	* Confirm that software uses previously defined policies.
+
+####10.4.3 BP3: Capture Security Requirements
+Make security requirements as much of a priority as functional requirements.
+Some factors that should be considered:
+
+* An understanding of how applications will be used/misused
+* The assets(data) the application will provide, and what protection level is appropriate for you business (Think about policies, regualtions and potential impact on reputation).
+* The architecture of the application and attack vectors
+* Potential compensating controls, and their cost/effectiveness
+
+CLASP detailed guidance for capturing security requirements:
+
+* Detail misuse cases
+	* Communicate risks to stakeholder
+	* Comminicate secuirty decisions to stakeholder
+* Document security relevant requirements
+* Identify attack surface
+* Identify global security policy
+	* Provide comparing the security posture to different products in organization
+* Identify resources and trust boundaries
+	* Provide a structured foundation for understanding the requirements of a system
+* Identify user roles
+* Specify the operational environment
+
+####10.4.4 BP4: Implement Secure Development Practices
+CLASP recommend:
+
+* Annotate class designs with security properties
+* Apply security priciples to design
+	* Harden application
+	* Identify risks in third-party apps
+* Implement and elaborate resource policies and security technologies
+* Implement interface contracts
+	* unit-level sematic input validation
+	* Indentify reliability errors in a structured way early as possible
+* Integrate security analysis into source management process
+* Perform code signing
+
+####10.4.5 BP5: Build Vulnerability Remediation Procedures
+Especially importan in context of updates and enhancements.
+
+CLASP guidance:
+
+* Addressing reported security issues
+	* Ensure that identified security risks in an implementation is properly handled
+* Managing security issue disclosure process
+
+####10.4.6 BP6: Define and Monitor Metrics
+
+* Monitor security metrics
+	* Gauge the likely security posture of the ongoing development
+	* Enforce accountability for inadequate security
+
+####10.4.7 BP7: Publish Operational Security Guidelines
+Security does not end when the application is in production.
+These tips will help orginazations make the best out of the capabilities you have built into your application:
+
+* Build an operational security guide
+	* Provide customer with docs security measures to better secure the product.
+	* Provide documentation for use of security functionality within the product.
+* Specify db security configuration
+
+###10.5 CLASP Security Activities to Augment Software Development Processes
+Core of CLASP: 24 security-related activities that can all be integrated in the SDLC.
+See page 228 for the list.
+
+###10.6 Applying CLASP Security Activities to Roles
+CLASP ties activities above with specific roles in the project.
+
+1. Project Manager
+	* Drives CLASP initiative
+	* Mandates management buy-in
+	* Responsibilities:
+		* Promote security awareness
+		* Manage metrics
+		* Hold team accountable
+2. Requirements Specifier
+	* Maps customer features to business requirements
+	* Provide NFRs
+	* Responsibilities:
+		* Detail security business req.
+		* Attempt reuse security req across orginization
+		* Specify misuse cases
+3. Architect
+	* Creates network an application architecture
+	* Specify network security requirments
+	* Responsibilities:
+		* Understand security implications of used technlogy
+		* Enumerate each resource in the system
+		* Identify roles in the system
+		* Identify basic operations on each resource
+		* Help others understand relations between resources
+4. Designer
+	* Keep risks out of application
+	* Has most security relevant work
+	* Responsibilities:
+		* Choose and research used technology
+		* Assess consequences and how to address identified flaws
+		* Document attack surface
+	* Designer should:
+		* Push back requirements with unrecognized risks
+		* Give implementers a roadmap to minimize risk
+		* Understand third-party integration risk
+		* Respond to threats
+5. Implementer
+	* Developers
+	* Responsibilites:
+		* Follow coding standards, policies etc..
+		* Identify and notify new risks to designer
+		* Attend security awareness training
+6. Test Analyst 
+	* Quality assurance
+7. Security Auditor
+	* Examine and assure state of project
+	* Responsibilities:
+		* Determine if application meets security requirments
+		* Find vulnerabilities in implementation
+
+###10.7 Re-engineering Your SDLC for CLASP
+Any effective process re-engineering plan should at min include these elements:
+
+* Business objectives that the process is being developed to meet
+* Project milestones
+* Pass/fail criteria for each milestone
+
+####10.7.1 Business Objectives
+Remember to include global application sw development security policies in the company.
+Another objective is to agree on the set of security metrics that will be collected and monitored.
+
+####10.7.2 Process Milestones
+Construct a draft plan that identifies the key proejct milestones. Focus on when activities will start, who performs them and how log to complete.
+
+####10.7.3 Process Evaluation Criteria
+Implement success critirias for your team.
+
+* Comparing the rate of depoyment across projects
+* Comparing the percentage of security faults identified in development vs production
+* Monitoring timelines, accuracy and thoroughness of key artifacts.
+
+##11 Metrics and Models for Security and Resilience Maturity
+What does a maturity model provide?
+
+* Set of metrics to use as benchmarks to state where we are and what have been done in terms of security
+* Detailed description of what to do and when to do it
+
+###OpenSAMM
+* OWASP
+
+It will aid in:
+
+* Evaluation an organization's existing software security practices
+* Building a balanced software security program in well-defined iterations
+* Demonstrating concrete improvements to a security assuracne program
+* Defining and measuring security activities within an organization
+
+Offers a roadmap and well defined maturity model for secure development and deployment as well as tools fro self assessment and planning
+
+OpenSAMM business functions
+
+* Governance
+	* The processes related to how an organization manaes overall software development activities
+* Contruction
+	* How organizations defin goals and creates software within development projects
+* Verification
+	* How orgs check and tests artifacts they produce
+* Deployment
+	* How orgs manage releases after software is created
+
+####Core Practice Areas - Governance
+* **Strategy & Metrics (SM):** Involves the strategic direction of measuring and tracking metrics about an organiation security posture
+* **Policy & Compliance (PC):** Set up program for increased assurance in software development and in operation.
+* **Education & Guidance (EG):** Increase security knowledge among staff.
+
+####Core Practice Areas - Construction
+
+* **Threat Assessment (TA):** Identify potential threats in software, to better understand its risk.
+* **Security Requirements (SR):** Promoting inclusion of security requirements during the SDLC.
+* **Secure Architecture (SA):** Bolster design process with activities to promote secure-by-default design.
+
+####Core Practice Areas - Verification
+
+* **Design Review (DR):** inspecting artifacts created from design process to insure security
+* **Code Review (CR):** Assessment of source code to aid in flaw discovery and related mitigation activities as wellas establish a baseline for secure coding expectations.
+* **Security Testing (ST):** Testing software in its runtime environment
+
+####Core Practice Areas - Deployment
+
+* **Vulnerability Management (VM):** Establishing consistent processes for managing vulnerability reports to limit exposure.
+* **Environment Hardening (EH):** Implementing controls in operating environment to bolster security posture of deployed applications
+* **Operational Enablement (OE):** Identify and capture security information needed by an operator to properly configure, deploy and run an orginizations software
+
+####Level of Maturity
+
+Each core practise ara has a level of maturity, each level has several components that specify the critical factors for understanding and achieving the sated level:
+
+* **Objective:** General statement that captures the assurance goal of attaining the associated level. 
+* **Activities:** Core requisites for attaining a level. Capture the core security function, and orginizations are free to determine how they fulfill the activities.
+* **Results:** Capabiities oobtained by achieving the given Level.
+* **Success Metrics:** Specify example measurements that can be used to see if the orginazation is performing at the given level.
+* **Costs:** Expenses incurred by an organization attaining the given level. Meant to provide idea of the one-time and ongoing costs with performing on a given level.
+* **Personnel:** Expenses in term of human resources within an organization attaining the given level.
+
+####Assurance
+OpenSAMM is designed for use in improving an assurance program in phases by:
+
+* Selecting security Practices to improve in the next phase
+* Achieving the next Objective in each Business Function by performing corresponding Activities by soecified Success Metrics.
+
+
+##Appendix A - 2010 CWE/SANS Top 25 Programming Errors
+Collabitation between SANS Institute,  and many top security experts in the US and Europe.
+Main goal: To prevent vulnerabilities at the source by educating programmers how to eliminate them before software is shipped.
+
+The list is categories into 3 sections:
+
+### Insecure Interaction Between Components
+Rank | Name
+---- | ----
+1 | XSS
+2 | SQL Injection
+4 | CSRF
+8 | Unrestricted Upload of dangerous files
+9 | OS Command Injection
+17| Exposing info through Error messages
+23| Open Redirect
+25| Race Condition
+
+### Risky Resource Management
+Rank | Name
+---- | ----
+3 | Classic Buffer overflow
+7 | Path Traversal
+12| Buffer access with incorrect Length Value
+13| Improper checks for Unusual or Exceptional Conditions
+14| Improper Control of Filename for include/require statement in PHP
+15| Improper validation of array index
+16| Integer Overflow
+18| Incorrect calculation of buffer size
+20| Download of code without integrity check
+22| Allocation of Resources without limits
+
+### Porous Defenses
+Rank | Name
+---- | ----
+5 | Authorization
+6 | Reliance of input in security decisions
+10| No encryption
+11| Use of Hard-Coded Credentials
+19| Missing Authentication for critical functions
+21| Incorrect permission assignment
+24| Use of Broken crypto algorithm
+
+##Appendix B - ESAPI
+
+
+
+
+
 
 ##Quotes explained:
 "Morris worm": Brought roughly 10% of the internet services in 1988 to a complete halt.
@@ -1031,3 +1491,6 @@ use someone elses number, and get that numbers SMS etc. Many services uses SMS c
 ##Acronyms:
 CERT - Computer Emergency Response Team
 SEI - Software Engineering Institute
+
+
+INF226-ProjectPres-Group5-H14.pdf
