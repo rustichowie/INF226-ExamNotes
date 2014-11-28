@@ -1430,6 +1430,30 @@ OpenSAMM is designed for use in improving an assurance program in phases by:
 * Selecting security Practices to improve in the next phase
 * Achieving the next Objective in each Business Function by performing corresponding Activities by soecified Success Metrics.
 
+###BSIMM - Building Secuirty In Maturity Model
+- Intended to stimulate cultural changes about creating secure software
+- Help determine maturity level in an organization
+- How to improve?
+- Not a How-To, but a collection of good ideas.
+
+####BSIMM - Categories
+
+* Governance - Strategy and Metrics ; Compliance and Policy ; Training
+	* Organize, manage and measure secure initiative.
+	* Its all about: Planning, Role assignment, identify goals.
+* Intelligence - Attack Models ; Security Features and Design ; Standards and Requirements
+	* Includespractices that results in collection of knowledge about software security activities in the org.
+	* Examples: Attack models, Proactive security guidance, Creating standards for major security controls
+* SSDL Touchpoints - Architecture Analysis ; Code Review ; Security Testing
+	* Practices associated with analysis and assurance of software development artifacts.
+	* Examples: Code review, black box testing, fuzz testing, Risk-driven white box testing
+* Deployment - Penetration Testing ; Software Environment ; Configuration Management and Vulnerability Management
+	* Practices that interface with traditional software and network security.
+	* Software configs
+	* Maintenance
+	* Software environment - OS, firewalls, patching, updating..
+
+
 
 ##Appendix A - 2010 CWE/SANS Top 25 Programming Errors
 Collabitation between SANS Institute,  and many top security experts in the US and Europe.
@@ -1476,10 +1500,40 @@ Rank | Name
 
 ##Appendix B - ESAPI
 
+Includes a set of security control interfaces. A reference implementation for each secuirty control.
+Each Interface is mapped to the OWASP Top 10
 
+###B.1 Interface Encoder
+- Encoding and Decoding
+- Expects canonicalized input
+- Whitelist security model
 
+###B.2 Interface Validator
+- Canonicalize and validates untrusted input
 
+###B.3 Interface User
+- Represents a user account
+- Key component ( is account locked, enabeled, expired ?)
 
+###B.4 Interface Authenticator
+- Generates and manages account credenrials and session identifiers
+
+###B.5 Interface Access Controller
+- Handles access to resources
+
+###B.6 Interface AccessReferenceMap
+- Used to avoid direct object references
+
+###B.7 Interface Encryptor
+- Cryptography
+
+###B.8 Interface HTTPUtilities
+- Collection of methods related to HTTP security
+	- Requests, response
+	- session
+	- cookie
+
+###B.9 Interface Logger
 
 ##Quotes explained:
 "Morris worm": Brought roughly 10% of the internet services in 1988 to a complete halt.
